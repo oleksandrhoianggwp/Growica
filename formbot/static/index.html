@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Report Submitter</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">Report Submitter</div>
+  <div id="health" class="health" aria-live="polite">Checking configuration…</div>
+</header>
+
+<main class="layout">
+  <section class="panel" aria-labelledby="new-title">
+    <h1 id="new-title">New batch</h1>
+    <form id="batch-form" novalidate>
+      <div class="field">
+        <span class="label">Submission type</span>
+        <div class="segmented" role="radiogroup" id="type-group"></div>
+      </div>
+
+      <div class="field">
+        <label class="label" for="targets">Targets <span class="muted">(one per line)</span></label>
+        <textarea id="targets" name="targets" rows="6" spellcheck="false" required></textarea>
+        <div class="hint" id="targets-hint"></div>
+      </div>
+
+      <div class="field">
+        <label class="label" for="threat_type">Threat type</label>
+        <select id="threat_type" name="threat_type" required>
+          <option value="" disabled selected>Select a threat type</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="label" for="reason">Reason</label>
+        <textarea id="reason" name="reason" rows="4" maxlength="2000" required></textarea>
+        <div class="hint"><span id="reason-count">0</span> / 2000</div>
+      </div>
+
+      <div class="field">
+        <label class="label" for="attachment">Attachment <span class="muted">(optional)</span></label>
+        <input type="file" id="attachment" name="attachment" accept=".jpg,.jpeg,.png,.pdf">
+        <div class="hint">JPG, JPEG, PNG or PDF, up to 2 MB. The same file is attached to every target.</div>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" id="allow_resubmit" name="allow_resubmit" value="true">
+        <span>Re-send targets that were already submitted with this threat type</span>
+      </label>
+
+      <div id="form-errors" class="errors" hidden></div>
+      <button type="submit" id="submit-btn" class="primary">Queue submissions</button>
+    </form>
+  </section>
+
+  <section class="panel" aria-labelledby="batch-title">
+    <div class="panel-head">
+      <h2 id="batch-title">Current batch</h2>
+      <div class="actions">
+        <button type="button" id="retry-batch" class="secondary" hidden>Retry failed</button>
+      </div>
+    </div>
+    <div id="batch-summary" class="summary"></div>
+    <div id="skipped" class="notice" hidden></div>
+    <div class="table-wrap">
+      <table class="results">
+        <thead><tr><th>#</th><th>Target</th><th>Status</th><th>Confirmation</th><th>Details</th><th></th></tr></thead>
+        <tbody id="batch-rows"><tr class="empty"><td colspan="6">No batch yet. Queue one on the left.</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="panel-head history-head">
+      <h2>History</h2>
+      <select id="history-filter" aria-label="Filter history by status">
+        <option value="">All statuses</option>
+        <option value="pending">Pending</option>
+        <option value="processing">Processing</option>
+        <option value="submitted">Submitted</option>
+        <option value="failed">Failed</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table class="results">
+        <thead><tr><th>#</th><th>Batch</th><th>Type</th><th>Target</th><th>Threat</th><th>Status</th><th>Confirmation</th><th>Updated</th><th></th></tr></thead>
+        <tbody id="history-rows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<div id="toast" class="toast" role="status" hidden></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
